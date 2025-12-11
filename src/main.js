@@ -2,48 +2,24 @@ import './style.css'
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
+const $score = document.querySelector('span');
 
 const blockSize = 20;
 const boardWidth = 14;
 const boardHeight = 30;
+
+let score = 0;
 
 canvas.width = blockSize * boardWidth;
 canvas.height = blockSize * boardHeight;
 
 context.scale(blockSize, blockSize);
 
-const board = [
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
-  [1,1,1,1,1,1,1,1,1,0,0,1,1,1,],
-];
+const board = createBoard(boardHeight, boardWidth);
+
+function createBoard(height, width){
+  return Array(height).fill().map(() => Array(width).fill(0))
+}
 
 const piece = {
   position: { x: 5, y: 5},
@@ -167,8 +143,11 @@ document.addEventListener('keydown', event => {
       }
       rotatedPiece.push(row)
     }
-    if(!checkCollision()){
-      piece.shape = rotatedPiece;
+    const previous = piece.shape
+    piece.shape = rotatedPiece;
+
+    if(checkCollision()){
+      piece.shape = previous;
     }
   }
 
@@ -209,6 +188,8 @@ function solidify(){
     alert('Game over yo!')
     board.forEach(row => row.fill(0))
   }
+
+  $score.innerText = score;
 }
 
 function killLine(){
@@ -222,7 +203,8 @@ function killLine(){
   linesToKill.forEach(y => {
     board.splice(y, 1);
     const newLine = Array(boardWidth).fill(0);
-    board.unshift(newLine)
+    board.unshift(newLine);
+    score += 10;
   })
 }
 
