@@ -114,25 +114,25 @@ function draw(){
 }
 
 document.addEventListener('keydown', event => { 
-  if(event.key === 'ArrowDown'){
+  if(event.key === 'ArrowDown' || event.key === 's' ){
     moveDown(piece)
   }
 
-  if(event.key === 'ArrowLeft'){
+  if(event.key === 'ArrowLeft' || event.key === 'a'){
     piece.position.x--;
     if(checkCollision()){
       piece.position.x++;
     }
   }
 
-  if(event.key === 'ArrowRight'){
+  if(event.key === 'ArrowRight' || event.key === 'd'){
     piece.position.x++;
     if(checkCollision()){
       piece.position.x--;
     }
   }
 
-  if(event.key === 'ArrowUp'){
+  if(event.key === 'ArrowUp' || event.key === 'w'){
     const rotatedPiece = [];
 
     for(let i = 0; i < piece.shape[0].length; i++){
@@ -187,6 +187,7 @@ function solidify(){
   if(checkCollision()){
     alert('Game over yo!')
     board.forEach(row => row.fill(0))
+    score = 0;
   }
 
   $score.innerText = score;
